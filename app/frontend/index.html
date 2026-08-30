@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="eng">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>System for the analysis of areas at risk of land subsidence</title>
+        <!--Leaflet CSS-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+        <!-- Custom CSS TODO: -->
+         <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div id="navbar">
+            <h1>System for the analysis of areas at risk of land subsidence</h1>
+            <div id="info">AOI: Central-South Silesia Voivodeship</div>
+        </div>
+        <div id="map"></div>
+        <div id="sidebar">
+            <h3>Layers</h3>
+            <div id="layers-panel">
+                <!-- TOCHECK: JS part -->
+            </div>
+            <h3>Legend</h3>
+            <div id="legend-items">
+                <div class="legend-item">
+                    <div class="legend-colour" style="background: linear-gradient(to-right, #0000FF, #FF0000);"></div>
+                    <span>EGMS: subsidence as blue - uplift as red</span>
+
+                </div>
+                <div class="legend-item">
+                    <div class="legend-colour" style="background: #b9f1bb; border: 2px solid #2dac33;"></div>
+                    <span>CLC</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-colour" style="background: #fabc60; border: 2px solid #f57d28;"></div>
+                    <span>CBDG: subsidence forecast</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-colour" style="background: #64e0f6; border: 2px solid #1976D2;"></div>
+                    <span>CBDG-Hydro Area of flood risk</span>
+                </div>
+            </div>
+            <h3>Filtry</h3>
+            <div id="filters">
+                <div class="filter-item">
+                    <label>EGMS velocity range [mm/year]:</label>
+                    <div style="display: flex; gap: 5px;">
+                        <!-- TOCHECK: values-->
+                        <input type="number" id="filter-velocity-min" placeholder="MIN" value="-10" style="width: 45%;">
+                        <input type="number" id="filter-velocity-max" placeholder="MAX" value="15" style="width: 45%;">
+                    </div>
+                </div>
+                <div class="filter-item">
+                    <label>CLC: </label>
+                    <select id="filter-clc">
+                        <option value="">All</option>
+                        <option value="1">Forest</option>
+                        <option value="2">Water</option>
+                        <option value="3">Buildings</option><!-- TODO: add rest from sql - dodaj oddzielną tabelę z pokryciem terenu-->
+                    </select>
+                </div>
+                <button id="filters-on">Apply filters</button>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/geotiff@1.8.0/dist/geotiff.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+        <script src="js/map.js"></script>
+    </body>
+</html>
