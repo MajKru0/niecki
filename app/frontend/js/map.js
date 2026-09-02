@@ -115,64 +115,30 @@ async function loadRasterLayer(layerId, colorMap){
     try{
         const response = await fetch(layer.url);
         const arrayBuffer = await response.arrayBuffer();
-        console.log(GeoTIFF);
-        const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer);
-        const image = await tiff.getImage();
-
-        const width = image.getWidth();
-        const height = image.getHeight();
-        const data = await image.readRasters();
-
-        //convert to imagedata
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const contx = canvas.getContext('2d');
-
-        const imageData = contx.createImageData(width, height);
-
-        const pixels = imageData.data;
-        const rasterdata = data[0]; // first band
+        const tiff = await parseGeoraster(arrayBuffer);
 
         //normalize
- let minVal = Infinity;
-let maxVal = -Infinity;
+        const minVal = tiff.mins[0];
+        const maxVal = tiff.maxs[0];
 //TODO: add no data handlnig
-
-for (let i = 0; i < rasterdata.length; i++) {
-    if (rasterdata[i] < minVal) minVal = rasterdata[i];
-    if (rasterdata[i] > maxVal) maxVal = rasterdata[i];
-}
-
-        for (let i = 0; i < rasterdata.length; i++){
-            const normalized = (rasterdata[i]-minVal)/(maxVal-minVal);
-            const color = colorMap(normalized);
-
-            pixels[i*4] = color.r; //r
-            pixels[i*4+1]=color.g; //g
-            pixels[i*4+2]=color.b; //b
-            pixels[i*4+3]= 255; //alfa
-        }
-
-        contx.putImageData(imageData, 0, 0);
-
-        //georeference
-        const bbox = image.getBoundingBox();
-        const [lon_sw, lat_sw] = proj4("EPSG:3035", "EPSG:4326", [bbox[0], bbox[1]]);
-        const [lon_ne, lat_ne] = proj4("EPSG:3035", "EPSG:4326", [bbox[2], bbox[3]]);
-const bounds = [
-    [lat_sw, lon_sw],
-    [lat_ne, lon_ne]
-];
-
-        const imageLayer = L.imageOverlay(canvas.toDataURL(), bounds, {
+        const geoRasterLayer = new GeoRasterLayer({
+            georaster: tiff,
             opacity: 0.7,
-            zIndex: layer.zIndex
+            resolution: 256, // Jak gęsto próbkować piksele (zwiększ dla jakości, zmniejsz dla wydajności)
+
+            pixelColouringFun: function(values){
+                const val = values[0];
+                const normalized = (val-minVal)/(maxVal-minVal);
+                const color = colorMap(normalized);
+                
+                return `rgb(${color.r}, ${color.g}, ${color.b})`;
+            }
         });
 
-        mapLayers[layerId] = imageLayer;
+
+        mapLayers[layerId] = geoRasterLayer;
         if(layer.visible) {
-            imageLayer.addTo(map);
+            geoRasterLayer.addTo(map);
             console.log(`Raster ${layerId} is loaded successfulyl`);
         }
 
