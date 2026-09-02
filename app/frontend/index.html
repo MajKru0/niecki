@@ -23,6 +23,10 @@
             <h3>Legend</h3>
             <div id="legend-items">
                 <div class="legend-item">
+                    <span>AOI bounds</span>
+                    <div class="legend-colour" style="border-width: 2px; border-color: #f53924; border-style: dashed;"></div>
+                </div>
+                <div class="legend-item">
                     <div class="legend-colour" style="background: linear-gradient(to-right, #0000FF, #FF0000);"></div>
                     <span>EGMS: subsidence as blue - uplift as red</span>
 
@@ -46,8 +50,8 @@
                     <label>EGMS velocity range [mm/year]:</label>
                     <div style="display: flex; gap: 5px;">
                         <!-- TOCHECK: values-->
-                        <input type="number" id="filter-velocity-min" placeholder="MIN" value="-10" style="width: 45%;">
-                        <input type="number" id="filter-velocity-max" placeholder="MAX" value="15" style="width: 45%;">
+                        <input type="number" id="filter-velocity-min" placeholder="MIN" value="-90" style="width: 45%;">
+                        <input type="number" id="filter-velocity-max" placeholder="MAX" value="30" style="width: 45%;">
                     </div>
                 </div>
                 <div class="filter-item">
@@ -63,8 +67,11 @@
             </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/geotiff@1.8.0/dist/geotiff.js"></script>
+        <script src="https://unpkg.com/georaster"></script>
+<script src="https://unpkg.com/georaster-layer-for-leaflet"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
-        <script src="js/map.js"></script>
+        <script type="module" src="js/layers.js"></script>
+        <script type="module" src="js/map.js"></script>
+        
     </body>
 </html>
