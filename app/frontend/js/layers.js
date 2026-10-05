@@ -34,13 +34,30 @@ function hslToRgb(h, s, l)
 }
 
 export function egmsColorMap(normalized){
-    //hue: 240/0 - blue 0/1 - red
-    const hue=240-(normalized*240);
+    //light between 45 and 65
+    //sat from 80 up
+
+    const hue=140-(normalized*140);
     const hueDeg = hue/360;
-    return hslToRgb(hueDeg, 0.8, 0.5);
+    var light = 0.45 + normalized/5;
+    var sat = light > 0.64 ? 0.8 - normalized + 0.8 : 0.8; 
+    sat = sat > 0.98 ? sat + hueDeg : sat;
+    light = hue < 70 ? 0.65 - normalized/5 : light;
+    light = light < 0.45 ? 0.45 : light;
+    light = light > 0.65 ? 0.65 : light;
+    return hslToRgb(hueDeg, sat, light);
 }
 
 export function hillshadeColourMap(normalized){
     const val = Math.round(normalized*255);
     return {r: val, g: val, b:val};
+}
+
+export function addOverLay(){
+    const  control = document.querySelector(".leaflet-control-layers-overlays");
+    const legend = document.createElement('label');
+    const bold = document.createElement('h3');
+    bold.textContent = 'Personalia:';
+    control.replaceWith(legend);
+    legend.append(bold, control);
 }

@@ -27,8 +27,8 @@
                     <div class="legend-colour" style="border-width: 2px; border-color: #f53924; border-style: dashed;"></div>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-colour" style="background: linear-gradient(to-right, #0000FF, #FF0000);"></div>
-                    <span>EGMS: subsidence as blue - uplift as red</span>
+                    <foot>27</foot>
+                    <canvas id="egms_legend" width="70" height="145" style="border:1px solid grey;"></canvas>
 
                 </div>
                 <div class="legend-item">
@@ -39,12 +39,12 @@
                     <div class="legend-colour" style="background: #fabc60; border: 2px solid #f57d28;"></div>
                     <span>CBDG: subsidence forecast</span>
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" id="container">
                     <div class="legend-colour" style="background: #64e0f6; border: 2px solid #1976D2;"></div>
                     <span>CBDG-Hydro Area of flood risk</span>
                 </div>
             </div>
-            <h3>Filtry</h3>
+            <h3>Filters</h3>
             <div id="filters">
                 <div class="filter-item">
                     <label>EGMS velocity range [mm/year]:</label>
@@ -68,7 +68,7 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
         <script src="https://unpkg.com/georaster"></script>
-<script src="https://unpkg.com/georaster-layer-for-leaflet"></script>
+        <script src="https://unpkg.com/georaster-layer-for-leaflet"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
         <script type="module" src="js/layers.js"></script>
         <script type="module" src="js/map.js"></script>
