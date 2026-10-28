@@ -13,7 +13,7 @@ temat:
 - app/backend — Flask API
 - app/frontend — interfejs webowy
 - docs — dokumentacja, materiały do pracy pisemnej
-"@ | Out-File -FilePath README.md -Encoding utf8
+
 
 
 ### Zakres
@@ -39,3 +39,17 @@ radarowych w celu wyznaczenia map przemieszczeń terenu, a następnie
 integrację uzyskanych wyników z danymi o pokryciu terenu z
 wykorzystaniem stworzonego systemu oraz analizę i wizualizację wyników
 na przykładzie wybranego obszaru badawczego.
+
+
+#### TODO
+- generate reports
+- add all layers
+- filter layers
+- add detected subsidence areas x2
+- ranking risk areas
+
+MAYBE:
+- timeseries + filtering
+- snap interferogram
+
+"@ | Out-File -FilePath README.md -Encoding utf8

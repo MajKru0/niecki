@@ -8,7 +8,6 @@ app = Flask(__name__)
 CORS(app, origins=[FRONTEND_URL])
 
 app.register_blueprint(layers_bp, url_prefix='/api/layers')
-app.register_blueprint(rasters_bp, url_prefix='/api/rasters')
 
 @app.route('/api/health')
 def health():
