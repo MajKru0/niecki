@@ -1,6 +1,8 @@
 import * as GeoTIFF from 'https://cdn.jsdelivr.net/npm/geotiff@3.0.5/+esm';
 import { egmsColorMap, hillshadeColourMap } from './layers.js';
-
+import { initVectorLayers, getEgmsP } from './load_vectors.js';
+import { loadRasterLayer } from './load_rasters.js';
+import { filterContext } from './filters.js';
 
 const STUDY_AREA_EXTENT_3035 = {
     north: 3100504.8686,
@@ -15,7 +17,7 @@ const vertices_3035 = [
     [4973279.67, 3010217.15],   
     [4901773.54, 3023797.42]  
 ];
-
+const form = document.getElementById('filters');
 /*
 .########..########...#######........##.########..######..########.####..#######..##....##
 .##.....##.##.....##.##.....##.......##.##.......##....##....##.....##..##.....##.###...##
@@ -56,9 +58,11 @@ console.log("vertices 4326: ", vertices_4326);
 .##.....##.##.....##.##.......................####.##....##.####....##...
 */
 const map = L.map('map', {
+    //crs: crs3035,
     maxZoom: 18,
-    minZoom: 6
+    minZoom: 0
 });
+window.map = map;
 //base map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -66,14 +70,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 map.fitBounds(leafletBounds, {padding: [30, 30]});
-
-const study_area_4326 = L.polygon(vertices_4326, {
-    color: '#e74c3c',
-    weight: 2,
-    opacity: 0.8,
-    fill: false,
-    dashArray: '6, 4'
-}).addTo(map);
 
 
 /*
@@ -85,7 +81,7 @@ const study_area_4326 = L.polygon(vertices_4326, {
 .##.......##.....##....##....##.......##....##..##....##
 .########.##.....##....##....########.##.....##..######.
 */
-
+const vectorLayersData = [];
 const layersList = {
     egms: {
         name: 'egms mean velocity MOCK',
@@ -109,82 +105,21 @@ const layersList = {
 
     }
 };
-const layerKeys = Object.keys(layersList);
-const layerContainer = L.control.layers({}, {}).addTo(map);
-layerContainer.addOverlay(study_area_4326, "AOI bounds")
-const mapLayers = {};
 
-//reading geojson TODO:
+const study_area_4326 = L.polygon(vertices_4326, {
+    color: '#e74c3c',
+    weight: 2,
+    opacity: 0.8,
+    fill: false,
+    dashArray: '6, 4'
+}).addTo(map);
+
+const layerContainer = L.control.layers({}, {}).addTo(map);
+layerContainer.addOverlay(study_area_4326, "AOI bounds");
+
 
 //reading rasters
-async function loadRasterLayer(layerId, colorMap){
-    const layer = layersList[layerKeys[layerId]];
-    console.log(`Reading raster ${layerId} from ${layer.url}`);
-    try{
-        const response = await fetch(layer.url);
-        const arrayBuffer = await response.arrayBuffer();
-        const tiff = await parseGeoraster(arrayBuffer);
 
-        //normalize
-        const minVal = tiff.mins[0];
-        const maxVal = tiff.maxs[0];
-        //console.log(minVal);
-//TODO: add no data handlnig
-        const geoRasterLayer = new GeoRasterLayer({
-            georaster: tiff,
-            opacity: 0.7,
-            resolution: 256, // Jak gęsto próbkować piksele (zwiększ dla jakości, zmniejsz dla wydajności)
-
-            pixelValuesToColorFn: function(values){
-                const val = values[0];
-                const normalized = (val-minVal)/(maxVal-minVal);
-                const color = colorMap(normalized);
-                //let m = Math.max(Math.max(val));
-               // console.log(m);
-                return `rgb(${color.r}, ${color.g}, ${color.b})`;
-            }
-        });
-       //console.log(typeof(geoRasterLayer.options.pixelValuesToColorFn([maxVal])));
-        layersList.egms.minColor = geoRasterLayer.options.pixelValuesToColorFn([minVal]);
-        layersList.egms.maxColor = geoRasterLayer.options.pixelValuesToColorFn([maxVal]);
-        const canvas = tiff.toCanvas({ height: 140, width: 20 });
-            console.log("canvas:", canvas);
-            document.getElementById("container").appendChild(canvas);
-        let x1 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/8]);
-        let x3 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/4]);
-        let x2 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/2]);
-        let x5 = geoRasterLayer.options.pixelValuesToColorFn([0]);
-        let x4 = geoRasterLayer.options.pixelValuesToColorFn([maxVal - (maxVal-minVal)/6]);
-        let x6 = geoRasterLayer.options.pixelValuesToColorFn([maxVal - (maxVal-minVal)/5]);
-        let x7 = geoRasterLayer.options.pixelValuesToColorFn([maxVal - (maxVal-minVal)/8]);
-        console.log(x5);
-        mapLayers[layerId] = geoRasterLayer;
-        if(layer.visible) {
-            geoRasterLayer.addTo(map);
-            
-            layerContainer.addOverlay(geoRasterLayer, layer.name)
-const c = document.getElementById(layer.legend_id);
-const ctx = c.getContext("2d");
-const grad=ctx.createLinearGradient(0,115,0,0);
-grad.addColorStop(0, layer.minColor);
-grad.addColorStop(0.14, x1);
-grad.addColorStop(0.3, x3);
-grad.addColorStop(0.45, x2);
-grad.addColorStop(0.5, x5);
-grad.addColorStop(0.73, x6);
-grad.addColorStop(0.8, x4);
-grad.addColorStop(0.9, x7);
-//-87,31 27,54
-grad.addColorStop(1, layer.maxColor); 
-            ctx.fillStyle = grad;
-ctx.fillRect(10,10,50,125);
-        }
-
-    }catch(error){
-        console.error(`Error - reading raster ${layerId} has failed.`);
-        console.error(error);
-    }
-}
 async function over(nam){
     const over = document.querySelector(nam);
     //const fieldset = document.createElement('fieldset');
@@ -194,9 +129,63 @@ async function over(nam){
     over.replaceWith(legend);
     legend.append(bold, over);
 }
+
+map.on("zoom", function() {
+    console.log(map.getZoom(), "zoom");
+    //const idx = layerContainer._layers.findIndex(x => x.name == "EGMS - points");
+    //console.log(layerContainer._layerControlInputs[idx].checked);
+});
+map.on("moveend", function(){
+    console.log(vectorLayersData);
+    //filterContext(map, map, layerContainer);
+    const z = map.getZoom();
+    if (z > 13){
+        filterContext(minVel, maxVel, vectorLayersData, isFilterOn);
+    }
+    const idx = vectorLayersData.findIndex(x => x.meta.label == "EGMS - points");
+    console.log(idx);
+
+    if(z <= 13 && vectorLayersData.length > 0 && idx > -1){
+        console.log("idx:", idx);
+        vectorLayersData[idx].visible = false;
+        const layer = vectorLayersData[idx].group.egmsP;
+        console.log(layer);
+        layer.clearLayers();
+
+    }
+    });
 document.addEventListener('DOMContentLoaded', () => {
-    loadRasterLayer(0, egmsColorMap);
+    loadRasterLayer(0, egmsColorMap, layersList, layerContainer);
    // loadRasterLayer(1, hillshadeColourMap);
+    initVectorLayers(layerContainer, vectorLayersData).catch(console.error);
     over(".leaflet-control-layers-overlays");
     console.log('[INIT] Mapa zainicjalizowana — AOI: Central-South Silesia');
+    console.log("zoom:", map.getZoom());
+    console.log(layerContainer);
+});
+let isFilterOn = false;
+let minVel = null;
+let maxVel = null;
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const minVelVal = form.elements['filter-velocity-min'];
+    const maxVelVal = form.elements['filter-velocity-max'];
+    var maxv = parseFloat(maxVelVal.value);
+    var minv = parseFloat(minVelVal.value);
+    if(minv >= maxv){
+        maxVelVal.value = minv;
+        minVelVal.value = maxv;
+       var tmp = maxv;
+       maxv = minv;
+       minv = tmp;
+    }
+    isFilterOn = true;
+    minVel = minv;
+    maxVel = maxv;
+    console.log(minv);
+    console.log(maxv);
+   
+    filterContext(minv, maxv, vectorLayersData, isFilterOn);
+
+    //event.preventDefault();
 });

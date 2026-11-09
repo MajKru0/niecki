@@ -61,3 +61,57 @@ export function addOverLay(){
     control.replaceWith(legend);
     legend.append(bold, control);
 }
+
+export function clcLegendColormap(code){
+//zwróć mape numer, kolor, i nazwe ze switch!
+//codeNum = Number(code);
+    switch(code){
+        case "111":
+            return {code: code, color: "rgb(235 55 52)", name: 'Continuous urban fabric'};
+        case "112":
+            return {code: code, color: "rgb(242 16 12)", name: 'Disontinuous urban fabric'};
+        case "121":
+            return {code: code, color: "rgb(252 96 242)", name: 'Industrial or commercial units and public facilities'};
+        case "122":
+        case "123":
+        case "124":
+            return {code: code, color: "rgb(252 13 236)", name: 'Transport units'};
+        case "131":
+            return {code: code, color: "rgb(166 135 86)", name: 'Mineral extraction sites'};
+        case "132":
+        case "133":
+            return {code: code, color: "rgb(156 101 14)", name: 'Dump and construction sites'};
+        case "141":
+        case "142":
+            return {code: code, color: "rgb(15 212 159)", name: 'Artificial non-agricultural vegetated areas'};
+        case "211":
+            return {code: code, color: "rgb(252 244 0)", name: 'Arable land'};
+        case "222":
+            return {code: code, color: "rgb(209 212 28)", name: 'Permanent crops'};
+        case "231":
+            return {code: code, color: "rgb(226 230 16)", name: 'Pastures'};
+        case "242":
+        case "243":
+            return {code: code, color: "rgb(242 225 114)", name: 'Heterogeneous agricultural areas'};
+        case "311":
+        case "312":
+        case "313":
+            return {code: code, color: "rgb(5 166 42)", name: 'Forests'};
+        case "324":
+            return {code: code, color: "rgb(32 247 82)", name: 'Shrubs'};
+        case "333":
+            return {code: code, color: "rgb(159 201 169)", name: 'Sparsely vegetated areas'};
+        case "331":
+            return {code: code, color: "rgb(156 186 163)", name: 'Beaches, dunes, and sand plains'};
+        case "411":
+            return {code: code, color: "rgb(90 122 61)", name: 'Inland marshes'};
+        case "511":
+        case "512":
+            return {code: code, color: "rgb(62 228 250)", name: 'Inland waters'};
+        default:
+            return {code: code, color: "rgb(91 143 166)", name: 'Pastures'};
+
+
+    }
+
+}

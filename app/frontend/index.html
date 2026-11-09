@@ -45,7 +45,7 @@
                 </div>
             </div>
             <h3>Filters</h3>
-            <div id="filters">
+            <form id="filters">
                 <div class="filter-item">
                     <label>EGMS velocity range [mm/year]:</label>
                     <div style="display: flex; gap: 5px;">
@@ -63,8 +63,8 @@
                         <option value="3">Buildings</option><!-- TODO: add rest from sql - dodaj oddzielną tabelę z pokryciem terenu-->
                     </select>
                 </div>
-                <button id="filters-on">Apply filters</button>
-            </div>
+                <button id="filters-on" type="submit">Apply filters</button>
+            </form>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
         <script src="https://unpkg.com/georaster"></script>
@@ -73,6 +73,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js"></script>
         <script type="module" src="js/layers.js"></script>
         <script type="module" src="js/map.js"></script>
+        <script type="module" src="js/filters.js"></script>
         
     </body>
 </html>
