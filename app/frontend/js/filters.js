@@ -1,4 +1,5 @@
-import { getEgmsP } from './load_vectors.js';
+import { getEgmsP, resetGeoJ} from './load_vectors.js';
+import { clcLegendColormap } from './layers.js';
 const API = "/api";
 
 
@@ -38,4 +39,44 @@ export async function filterEgms(minVal, maxVal, layersOn){
 }catch (e){
   console.error(e);
 }
+}
+export async function filterCLC(layersOn, code){
+  try{
+    const entry = layersOn.find(x => x.meta.name == "clc");
+    console.log("CLC FILTER");
+    console.log(layersOn)
+    console.log(entry);
+    if(entry.visible){
+      console.log('xxxxxxxxxxx');
+         await resetGeoJ(entry, layersOn, "clc");
+    }
+    const obj = clcLegendColormap(code);
+    const arr = obj.additional ?? [code];
+    let arrStr = "";
+    arr.forEach((el) => arrStr = arrStr+"'"+el+"',");
+    let fin = arrStr.slice(0, -1);
+    if(!code) fin = "";
+    console.log(fin);
+    const res = await fetch(`${API}/layers/${entry.meta.name}?ccode=${fin}`);
+    if (!res.ok) throw new Error(`${entry.meta.name}: ${res.status}`);
+    entry.group[entry.meta.layerN].addData(await res.json());
+    entry.visible = true;
+    console.log(entry);
+  }catch (e){
+  console.error(e);
+}
+  
+
+}
+export async function resetFilter(typ, layOn){
+  //przycisk reset filter lub clc ALL
+    const egmsE = layOn.find(x => x.meta.name == "egms_vector"); 
+    const clcE = layOn.find(x => x.meta.name == "clc");
+    if(!clcE.visible && !egmsE.visible) return;
+    if(typ && egmsE && egmsE.visible){
+      await filterEgms(null, null, layOn)
+   }
+  
+  await filterCLC(layOn, 0);
+
 }

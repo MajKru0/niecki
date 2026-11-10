@@ -96,24 +96,17 @@ def get_layer(name):
 
     params = {}
     where = ""
-    bbox = request.args.get("bbox")
-    if bbox:
+    clc_code = request.args.get("ccode");
+    if(clc_code):
         try:
-            minx, miny, maxx, maxy = map(float, bbox.split(","))
+            cc = clc_code.replace(",", ", ")
+            conditions.append(f'code_18 IN ({cc})')
+            #params.update(cc=clc_code)
         except ValueError:
-            abort(400, "bbox=minx,miny,maxx,maxy (EPSG:4326, stopnie)")
-        params.update(minx=minx, miny=miny, maxx=maxx, maxy=maxy)
-
+            abort(400, "clc");
     table = q(cfg["table"])
-    gcol = q(cfg.get("geom_col", "geom"))
-    
+    gcol = q(cfg.get("geom_col", "geom"))    
     select_cols = ", ".join([q(c) for c in cfg["cols"]] + [f"{gcol} AS geom"])
-    if name == "egms_vector":
-        conditions.append(f"ST_Intersects({gcol}, ST_GeomFromText(:aoi, 3035))")
-        params["aoi"] = AOI_WKT
-    if bbox:
-        where = (f"WHERE {gcol} && ST_Transform("
-                 f"ST_MakeEnvelope(:minx, :miny, :maxx, :maxy, 4326), 3035)")
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
     sql = text(f"""
         SELECT jsonb_build_object(

@@ -57,13 +57,11 @@
                 <div class="filter-item">
                     <label>CLC: </label>
                     <select id="filter-clc">
-                        <option value="">All</option>
-                        <option value="1">Forest</option>
-                        <option value="2">Water</option>
-                        <option value="3">Buildings</option><!-- TODO: add rest from sql - dodaj oddzielną tabelę z pokryciem terenu-->
+                        <option value="100" selected>All</option><!-- TODO: add rest from sql - dodaj oddzielną tabelę z pokryciem terenu-->
                     </select>
                 </div>
                 <button id="filters-on" type="submit">Apply filters</button>
+                <button id="filters-off" type="reset" style="background: #d33c2b">Reset</button>
             </form>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>

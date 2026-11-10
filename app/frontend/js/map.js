@@ -1,8 +1,8 @@
 import * as GeoTIFF from 'https://cdn.jsdelivr.net/npm/geotiff@3.0.5/+esm';
-import { egmsColorMap, hillshadeColourMap } from './layers.js';
+import { egmsColorMap, hillshadeColourMap, getCLC } from './layers.js';
 import { initVectorLayers, getEgmsP } from './load_vectors.js';
 import { loadRasterLayer } from './load_rasters.js';
-import { filterContext } from './filters.js';
+import { filterContext, filterCLC, resetFilter } from './filters.js';
 
 const STUDY_AREA_EXTENT_3035 = {
     north: 3100504.8686,
@@ -155,6 +155,7 @@ map.on("moveend", function(){
     }
     });
 document.addEventListener('DOMContentLoaded', () => {
+    getCLC();
     loadRasterLayer(0, egmsColorMap, layersList, layerContainer);
    // loadRasterLayer(1, hillshadeColourMap);
     initVectorLayers(layerContainer, vectorLayersData).catch(console.error);
@@ -168,6 +169,7 @@ let minVel = null;
 let maxVel = null;
 form.addEventListener('submit', (event) => {
     event.preventDefault();
+    ////////////EGMS/////////////
     const minVelVal = form.elements['filter-velocity-min'];
     const maxVelVal = form.elements['filter-velocity-max'];
     var maxv = parseFloat(maxVelVal.value);
@@ -184,8 +186,27 @@ form.addEventListener('submit', (event) => {
     maxVel = maxv;
     console.log(minv);
     console.log(maxv);
-   
+
+   /////////CLC/////////
+    //TODO: dodać filtr clc
+    const selected = form.elements['filter-clc'].value;
+    console.log(selected);
+    if(selected != "100"){
+        filterCLC(vectorLayersData, selected);
+    }else{
+        resetFilter(false, vectorLayersData);
+    }
+
     filterContext(minv, maxv, vectorLayersData, isFilterOn);
 
     //event.preventDefault();
+});
+form.addEventListener('reset', (event) => {
+    event.preventDefault()
+    isFilterOn = false;
+    resetFilter(true, vectorLayersData);
+    form.elements['filter-velocity-min'].value = -90;
+    form.elements['filter-velocity-max'].value = 30;
+    form.elements['filter-clc'].value = 100;
+    filterContext(null, null, vectorLayersData, isFilterOn);
 });

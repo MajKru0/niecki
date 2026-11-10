@@ -10,17 +10,22 @@ const popup = (feature, layer) => {
 const styleFns = {
   clc: feature => {
     const c = clcLegendColormap(feature.properties.code_18).color;
-    return { color: c, fillColor: c, weight: 1, opacity: 0.6, fillOpacity: 0.4 };
+    return { color: c, fillColor: c, weight: 1, opacity: 0.6, fillOpacity: 0.6 };
   }
 };
 //ładowanie danych z funkcji initvectorLayers
-  async function load(entry) {
-    if (entry.visible) return;                      // już pobrane, nie pobieraj drugi raz
+async function load(entry) {
+  try{
+    console.log("BASIC LOAD VECTOR");
+     if (entry.visible) return;                      // już pobrane, nie pobieraj drugi raz
     const res = await fetch(`${API}/layers/${entry.meta.name}`);
     if (!res.ok) throw new Error(`${entry.meta.name}: ${res.status}`);
     entry.group[entry.meta.layerN].addData(await res.json());
-    entry.visible = true;
+  }catch (e){
+  console.error(e);
   }
+   
+}
 
 export async function initVectorLayers(layerContainer, layersOn) {
   const entries = [];
@@ -47,11 +52,18 @@ console.log(catalog, ":catalog");
 
   window.map.on("overlayadd", e => {
     console.log(layerContainer);
-    const entry = entries.find(x => x.group[x.meta.layerN] === e.layer);
+    console.log("ldkmsdkdjl");
+    const entry = layersOn.find(x => x.group[x.meta.layerN] === e.layer);
     if (entry.meta.name == "egms_vector"){
       return;
     }
     load(entry).catch(console.error);
+    entry.visible = true;
+    if(entry.meta.name == "clc" && entry){
+      document.getElementById('filter-clc').disabled = false;
+    }
+    
+    
   });
 }
 export async function getEgmsP(layersOn){
@@ -62,17 +74,11 @@ export async function getEgmsP(layersOn){
     console.log(b);
     const bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].join(",");
     const entry = layersOn.find(x => x.meta.name === "egms_vector");
-    const idx = layersOn.findIndex(x => x.meta.layerN == "egmsP"); 
-    console.log("idx:::: ", idx, "entry??: ", entry);
     const e = window.map.getZoom(); 
     const res = await fetch(`${API}/layers/egms_vector?bbox=${bbox}&zoom=${e}`);
     if (!res.ok) throw new Error(`EGMS points: ${res.status}`);
     if(entry.visible){
-      entry.visible = false;
-      console.log(entry);
-      const lay = layersOn[idx].group.egmsP;
-      lay.clearLayers();
-      //layerContainer.removeLayer(layersOn[0].group.egmsP);
+      resetGeoJ(entry, layersOn, "egmsP");
     } 
     entry.group["egmsP"].addData(await res.json());
     entry.visible = true;
@@ -80,4 +86,12 @@ export async function getEgmsP(layersOn){
 }catch (e){
   console.error(e);
 }
+}
+export async function resetGeoJ(entry, layersOn, layerN){
+  const idx = layersOn.findIndex(x => x.meta.layerN == layerN); 
+  entry.visible = false;
+  console.log(entry);
+  const lay = layersOn[idx].group[layerN];
+  console.log("lay: ", lay);
+  await lay.clearLayers();
 }

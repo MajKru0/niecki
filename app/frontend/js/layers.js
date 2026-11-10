@@ -75,15 +75,15 @@ export function clcLegendColormap(code){
         case "122":
         case "123":
         case "124":
-            return {code: code, color: "rgb(252 13 236)", name: 'Transport units'};
+            return {code: code, color: "rgb(252 13 236)", name: 'Transport units', additional: ["122", "123", "124"]};
         case "131":
             return {code: code, color: "rgb(166 135 86)", name: 'Mineral extraction sites'};
         case "132":
         case "133":
-            return {code: code, color: "rgb(156 101 14)", name: 'Dump and construction sites'};
+            return {code: code, color: "rgb(156 101 14)", name: 'Dump and construction sites', additional: ["132", "133"]};
         case "141":
         case "142":
-            return {code: code, color: "rgb(15 212 159)", name: 'Artificial non-agricultural vegetated areas'};
+            return {code: code, color: "rgb(15 212 159)", name: 'Artificial non-agricultural vegetated areas', additional: ["141", "142"]};
         case "211":
             return {code: code, color: "rgb(252 244 0)", name: 'Arable land'};
         case "222":
@@ -92,11 +92,11 @@ export function clcLegendColormap(code){
             return {code: code, color: "rgb(226 230 16)", name: 'Pastures'};
         case "242":
         case "243":
-            return {code: code, color: "rgb(242 225 114)", name: 'Heterogeneous agricultural areas'};
+            return {code: code, color: "rgb(242 225 114)", name: 'Heterogeneous agricultural areas', additional: ["242", "243"]};
         case "311":
         case "312":
         case "313":
-            return {code: code, color: "rgb(5 166 42)", name: 'Forests'};
+            return {code: code, color: "rgb(5 166 42)", name: 'Forests', additional: ["311", "312", "313"]};
         case "324":
             return {code: code, color: "rgb(32 247 82)", name: 'Shrubs'};
         case "333":
@@ -107,7 +107,7 @@ export function clcLegendColormap(code){
             return {code: code, color: "rgb(90 122 61)", name: 'Inland marshes'};
         case "511":
         case "512":
-            return {code: code, color: "rgb(62 228 250)", name: 'Inland waters'};
+            return {code: code, color: "rgb(62 228 250)", name: 'Inland waters', additional: ["511", "512"]};
         default:
             return {code: code, color: "rgb(91 143 166)", name: 'Pastures'};
 
@@ -115,3 +115,17 @@ export function clcLegendColormap(code){
     }
 
 }
+export function getCLC(){
+    const clc_base=[111, 112, 122, 131, 132, 141, 211, 222, 231, 242, 311, 324, 333, 331, 411, 511];
+    const clc_list = document.getElementById('filter-clc').options;
+    clc_base.forEach(option => {
+        let res = clcLegendColormap(option.toString());
+        clc_list.add(
+            new Option(res.name, res.code, false)
+        )
+        res = {};
+    }    
+    )
+    document.getElementById('filter-clc').setAttribute('disabled', true);
+}
+
