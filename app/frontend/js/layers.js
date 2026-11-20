@@ -115,7 +115,7 @@ export function clcLegendColormap(code){
     }
 
 }
-export function getCLC(){
+export function getCLC(r=true){
     const clc_base=[111, 112, 122, 131, 132, 141, 211, 222, 231, 242, 311, 324, 333, 331, 411, 511];
     const clc_list = document.getElementById('filter-clc').options;
     clc_base.forEach(option => {
@@ -126,6 +126,9 @@ export function getCLC(){
         res = {};
     }    
     )
-    document.getElementById('filter-clc').setAttribute('disabled', true);
+    if(r){
+        document.getElementById('filter-clc').setAttribute('disabled', true);
+    }
+    
 }
 

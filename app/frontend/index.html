@@ -6,8 +6,9 @@
         <title>System for the analysis of areas at risk of land subsidence</title>
         <!--Leaflet CSS-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-        <!-- Custom CSS TODO: -->
          <link rel="stylesheet" href="css/style.css">
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     </head>
     <body>
         <div id="navbar">
@@ -16,10 +17,6 @@
         </div>
         <div id="map"></div>
         <div id="sidebar">
-            <h3>Layers</h3>
-            <div id="layers-panel">
-                <!-- TOCHECK: JS part -->
-            </div>
             <h3>Legend</h3>
             <div id="legend-items">
                 <div class="legend-item">
@@ -46,22 +43,23 @@
             </div>
             <h3>Filters</h3>
             <form id="filters">
+                <div class="filter-items">
                 <div class="filter-item">
                     <label>EGMS velocity range [mm/year]:</label>
                     <div style="display: flex; gap: 5px;">
-                        <!-- TOCHECK: values-->
                         <input type="number" id="filter-velocity-min" placeholder="MIN" value="-90" style="width: 45%;">
                         <input type="number" id="filter-velocity-max" placeholder="MAX" value="30" style="width: 45%;">
                     </div>
                 </div>
                 <div class="filter-item">
                     <label>CLC: </label>
-                    <select id="filter-clc">
-                        <option value="100" selected>All</option><!-- TODO: add rest from sql - dodaj oddzielną tabelę z pokryciem terenu-->
+                    <select id="filter-clc" multiple>
+                        <option value="100" selected>All</option>
                     </select>
                 </div>
+                </div>
                 <button id="filters-on" type="submit">Apply filters</button>
-                <button id="filters-off" type="reset" style="background: #d33c2b">Reset</button>
+                <button id="filters-off" type="reset">Reset</button>
             </form>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -72,6 +70,7 @@
         <script type="module" src="js/layers.js"></script>
         <script type="module" src="js/map.js"></script>
         <script type="module" src="js/filters.js"></script>
+        <script type="module" src="js/raports.js"></script>
         
     </body>
 </html>

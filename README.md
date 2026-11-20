@@ -44,8 +44,6 @@ na przykładzie wybranego obszaru badawczego.
 #### TODO
 - generate reports
 - add all layers
-- filter layers
-- add detected subsidence areas x2
 - ranking risk areas
 
 MAYBE:

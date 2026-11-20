@@ -3,6 +3,7 @@ import { egmsColorMap, hillshadeColourMap, getCLC } from './layers.js';
 import { initVectorLayers, getEgmsP } from './load_vectors.js';
 import { loadRasterLayer } from './load_rasters.js';
 import { filterContext, filterCLC, resetFilter } from './filters.js';
+import { info} from './raports.js';
 
 const STUDY_AREA_EXTENT_3035 = {
     north: 3100504.8686,
@@ -96,7 +97,7 @@ const layersList = {
     hillshade: {
         name: 'Hillshade (DTM) MOCK',
         type: 'raster',
-        url: 'data/mocks/mock_hillshade.tif', 
+        url: 'https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WMTS/ShadedRelief', 
         visible: true,
         zIndex: 90,
         minColor: "",
@@ -117,7 +118,6 @@ const study_area_4326 = L.polygon(vertices_4326, {
 const layerContainer = L.control.layers({}, {}).addTo(map);
 layerContainer.addOverlay(study_area_4326, "AOI bounds");
 
-
 //reading rasters
 
 async function over(nam){
@@ -125,7 +125,7 @@ async function over(nam){
     //const fieldset = document.createElement('fieldset');
     const legend = document.createElement('label');
     const bold = document.createElement('h3');
-    bold.textContent = 'Personalia:';
+    bold.textContent = 'Layers:';
     over.replaceWith(legend);
     legend.append(bold, over);
 }
@@ -154,13 +154,27 @@ map.on("moveend", function(){
 
     }
     });
+
+info.addTo(map);
+const nmtShaded = L.tileLayer.wms(
+  'https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WMS/ShadedRelief', {
+    layers: 'Raster',
+    format: 'image/png',  
+    transparent: true,
+    opacity: 0.8,
+    bounds: study_area_4326.getBounds(),
+    attribution: '© GUGiK / Geoportal.gov.pl'
+});
+nmtShaded.addTo(map);
+layerContainer.addOverlay(nmtShaded, "Digital Terrain Model");
+// method that we will use to update the control based on feature properties passed
 document.addEventListener('DOMContentLoaded', () => {
     getCLC();
     loadRasterLayer(0, egmsColorMap, layersList, layerContainer);
    // loadRasterLayer(1, hillshadeColourMap);
     initVectorLayers(layerContainer, vectorLayersData).catch(console.error);
     over(".leaflet-control-layers-overlays");
-    console.log('[INIT] Mapa zainicjalizowana — AOI: Central-South Silesia');
+    console.log('[INIT] Mapa zainicjalizowana — AOI: Central-South Silesia', map);
     console.log("zoom:", map.getZoom());
     console.log(layerContainer);
 });
@@ -210,3 +224,4 @@ form.addEventListener('reset', (event) => {
     form.elements['filter-clc'].value = 100;
     filterContext(null, null, vectorLayersData, isFilterOn);
 });
+

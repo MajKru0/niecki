@@ -1,5 +1,7 @@
 import { clcLegendColormap } from "./layers.js";
+import { getLayers2raport, vectorLayersNames } from "./raports.js";
 const API = "/api";
+var ready2generate = false;
 const popup = (feature, layer) => {
   const rows = Object.entries(feature.properties)
     .map(([k, v]) => `<b>${k}</b>: ${v ?? "–"}`)
@@ -47,6 +49,8 @@ console.log(catalog, ":catalog");
     entries.push({ meta, group, visible: false, abort: null });
     console.log(entries.length);
     layersOn.push({ meta, group, visible: false, abort: null });
+    getLayers2raport(false, null);
+    ready2generate = true;
     layerContainer.addOverlay(group[layerN], meta.label);
   }
 
@@ -54,6 +58,7 @@ console.log(catalog, ":catalog");
     console.log(layerContainer);
     console.log("ldkmsdkdjl");
     const entry = layersOn.find(x => x.group[x.meta.layerN] === e.layer);
+    getLayers2raport(ready2generate, entry.meta);
     if (entry.meta.name == "egms_vector"){
       return;
     }
@@ -95,3 +100,4 @@ export async function resetGeoJ(entry, layersOn, layerN){
   console.log("lay: ", lay);
   await lay.clearLayers();
 }
+

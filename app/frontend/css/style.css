@@ -76,8 +76,22 @@ body {
     font-weight: bold;
     transition: background 0.2s, transform 0.1s;
 }
+#filters-off {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: #502c2c;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
+}
 #filters-on:hover {
     background: #1a252f;
+}
+#filters-off:hover {
+    background: #792b2b;
 }
 #filters-on:active {
     transform: scale(0.97);
@@ -91,3 +105,63 @@ body {
     padding: 5px 10px;
 }
 
+.info {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: rgba(255,255,255,0.8);
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	border-radius: 5px;
+}
+.generation-form {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: rgba(255,255,255,0.8);
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	border-radius: 5px;
+    width: 190px;
+}
+.generation-form h4 {
+	margin: 0 0 5px;
+	color: #777;
+}
+
+#coordinatesgr {
+    display: grid;
+    grid-template-columns: max-content 1fr; /* kolumna labeli = najdłuższy label, reszta na inputy */
+    gap: 4px 5px;
+    align-items: center;
+    width: 174px;
+    padding: 5px 3px 8px 0;
+}
+
+#coordinatesgr label {
+    grid-column: 1; /* każdy label w pierwszej kolumnie, czyli w nowej linii */
+}
+
+#coordinatesgr input {
+    grid-column: 2;
+    width: 100%;    /* wypełnia drugą kolumnę */
+    box-sizing: border-box;
+    min-width: 0;   /* pozwala inputowi się zwęzić */
+}
+#genBtn {
+    width: 100%;
+    padding: 3px;
+    margin-top: 5px;
+    background: #6ba9f4;
+    color: black;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
+}
+#genBtn:hover {
+    background: #5b87c9;
+}
+#genBtn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+.smallErr {
+    color: #dc3545;
+}

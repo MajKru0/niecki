@@ -19,7 +19,13 @@ layers = {
                      "style": {"color": "#2b8cbe", "weight": 1, "fillOpacity": 0.3}},
     "clc": {"table": "clc18", "geom_col": "geom", "cols": ["id", "code_18"], "max": 50000, "label": "CLC 2018", "geom": "polygon", "min_zoom": 0, "layerN": "clc"},
     "egms_vector": {"table": "egms_points_stats", "geom_col": "geometry", "cols": ["pid", "mean_velocity", "rmse", "code_18", "E", "N"], "max": 20000,
-                    "label": "EGMS - points", "geom": "point", "min_zoom": 13, "visible": False, "layerN": "egmsP"}
+                    "label": "EGMS - points", "geom": "point", "min_zoom": 13, "visible": False, "layerN": "egmsP"},
+    "dsa": {"table": "dsa", "geom_col": "geom", "cols": ["id", "area_m2"], "label": "Detected Subsidence Areas", 
+            "geom": "line", "min_zoom": 0, "visible": False, "layerN": "DSA", "style":
+              {"color": "#f48116", "weight": 3}},
+    "dsa_filled": {"table": "niecki_filled", "geom_col": "geom", "cols": ["id", "area_m2"],
+                    "label": "Detected Subsidence Areas - filled nodata areas", "geom": "line", "min_zoom": 0, "visible": False,
+                      "layerN": "DSAf", "style": {"color": "#9460f5", "weight": 3}}
 }
 #TODO: add filters to egms_vector np pobierz współrzędne aktualnego widoku, żeby tylko w powiekszeniu i w danym widoku się ładowały
 
