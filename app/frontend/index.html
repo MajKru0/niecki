@@ -24,21 +24,39 @@
                     <div class="legend-colour" style="border-width: 2px; border-color: #f53924; border-style: dashed;"></div>
                 </div>
                 <div class="legend-item">
-                    <foot>27</foot>
-                    <canvas id="egms_legend" width="70" height="145" style="border:1px solid grey;"></canvas>
-
+                    <span>Corine Land Cover</span>
+                    <div class="legend-colour-clc" style="border:1px solid grey;">
+                    </div>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-colour" style="background: #b9f1bb; border: 2px solid #2dac33;"></div>
-                    <span>CLC</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-colour" style="background: #fabc60; border: 2px solid #f57d28;"></div>
                     <span>CBDG: subsidence forecast</span>
+                    <div class="legend-colour" style="background: #fabc60; border: 2px solid #fabc60;"></div>
+                    
                 </div>
                 <div class="legend-item" id="container">
-                    <div class="legend-colour" style="background: #64e0f6; border: 2px solid #1976D2;"></div>
                     <span>CBDG-Hydro Area of flood risk</span>
+                    <div class="legend-colour" style="background: #2b8cbe; border: 2px solid #2b8cbe;"></div>
+                    
+                </div>
+                <div class="legend-item" id="container">
+                    <span>Detected subsidence areas var. 1</span>
+                    <div class="legend-colour" style="background: #fd44b9; border: 2px solid #fd44b9;"></div>
+                    
+                </div>
+                <div class="legend-item" id="container">
+                    <span>Detected subsidence areas var. 2</span>
+                    <div class="legend-colour" style="background: #9460f5; border: 2px solid #9460f5;"></div>                  
+                </div>
+                <div class="legend-item" id="container">
+                    <span>EGMS point</span>
+                    <div class="legend-item">
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#f9729d;"></i>  </div>              
+                </div>
+                <div class="legend-item">
+                    <span>EGMS raster</span>
+                    <div>
+                    <canvas id="egms_legend" width="70" height="145" style="border:1px solid grey;"></canvas>
+                    </div>
                 </div>
             </div>
             <h3>Filters</h3>

@@ -118,11 +118,18 @@ export function clcLegendColormap(code){
 export function getCLC(r=true){
     const clc_base=[111, 112, 122, 131, 132, 141, 211, 222, 231, 242, 311, 324, 333, 331, 411, 511];
     const clc_list = document.getElementById('filter-clc').options;
+    const clc_legend = document.querySelector(".legend-colour-clc");
     clc_base.forEach(option => {
-        let res = clcLegendColormap(option.toString());
+        var res = clcLegendColormap(option.toString());
         clc_list.add(
             new Option(res.name, res.code, false)
         )
+        const span = document.createElement("span");
+        span.textContent = res.name;
+        const box = document.createElement("div");
+        box.setAttribute('class', 'legend-colour-clc-draw');
+        box.style.setProperty("border", `2px solid ${res.color}`);
+        clc_legend.append(span, box);
         res = {};
     }    
     )

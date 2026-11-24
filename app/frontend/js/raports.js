@@ -79,14 +79,14 @@ L.Control.CustomControl = L.Control.extend({
     console.log('show form'); //last
     
 
-    this._div.innerHTML = `<h4>Generate Raport</h4><form id="raport"><fieldset id="radiogr">
+    this._div.innerHTML = `<h4>Generate Report</h4><form id="raport"><fieldset id="radiogr">
         <input type="radio" id="cmv" name="bounds" value="0" checked>
         <label for="cmv">Current Map View</label><br>
         <input type="radio" id="coord" name="bounds" value="1">
         <label for="coord">Input Own Coordinates</label></fieldset><br><p id="pepe"></p>
         <fieldset id="filtergr">
         </fieldset><br>` +  (vectorLayersNames.length>0 ? `
-        <button id="genBtn" type="submit">Generate Raport</button>` : `<button id="genBtn" type="submit" disabled>Generate Raport
+        <button id="genBtn" type="submit">Generate Report</button>` : `<button id="genBtn" type="submit" disabled>Generate Report
         </button>`)+
         `</form>`;
     L.DomEvent.disableClickPropagation(this._div);
@@ -168,14 +168,14 @@ export function getLayers2raport(isReady, layersOn){
     generator.remove();
     console.log("12");
     info.update();
-    console.log("cannot generate raport, choose layers1")
+    console.log("cannot generate Report, choose layers1")
 }
 });
 if(vectorLayersNames.length>0){
     console.log("can generate report", ...vectorLayersNames);
 }else{
     isGenReady = false;
-    console.log("cannot generate raport, choose layers")
+    console.log("cannot generate Report, choose layers")
 }
 if(isGenReady){
     info.update();
@@ -212,6 +212,19 @@ async function generateReport(forms){
         
         console.log("bbox: ", selectedBounds);
         const res = await fetch(`${API}/raports/generate?bbox=${selectedBounds}&code=${clc}&vf=${[filterObj.min, filterObj.max]}&L=${arrStr}&radio=${selectedRadio}`);
+                if (!res.ok) throw new Error(await res.text());      // komunikat błędu z backendu
+
+        const blob = await res.blob();  
+        const cd = res.headers.get("Content-Disposition") || "";
+        const m = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(cd);
+        const filename = m ? decodeURIComponent(m[1]) : "report.pdf";
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();                                            // pobranie bez opuszczania strony
+        a.remove();
     }catch (error){
         console.error(error);
     }

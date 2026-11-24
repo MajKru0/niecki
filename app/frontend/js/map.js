@@ -71,7 +71,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 map.fitBounds(leafletBounds, {padding: [30, 30]});
-
+const scale = L.control.scale({metric: true, imperial: false }).addTo(map);
 
 /*
 .##..........###....##....##.########.########...######.

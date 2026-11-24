@@ -165,3 +165,17 @@ body {
 .smallErr {
     color: #dc3545;
 }
+.legend-item {
+    margin: 2px 2px 2px 2px;
+    padding: 1px 1px 1px 1px;
+}
+.legend-colour-clc{
+    margin: 5px 5px 5px 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 7px;
+}
+.legend-colour-clc-draw {
+    border: 2px solid;
+    background: red;
+}

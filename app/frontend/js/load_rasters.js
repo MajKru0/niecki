@@ -38,9 +38,9 @@ export async function loadRasterLayer(layerId, colorMap, layersList, layerContai
        //console.log(typeof(geoRasterLayer.options.pixelValuesToColorFn([maxVal])));
         layersList.egms.minColor = geoRasterLayer.options.pixelValuesToColorFn([-88]);
         layersList.egms.maxColor = geoRasterLayer.options.pixelValuesToColorFn([30]);
-        const canvas = tiff.toCanvas({ height: 140, width: 20 });
+       /* const canvas = tiff.toCanvas({ height: 140, width: 20 });
             console.log("canvas:", canvas);
-            document.getElementById("container").appendChild(canvas);
+            document.getElementById("container").appendChild(canvas);*/
         let x0 = geoRasterLayer.options.pixelValuesToColorFn([-87]);
         let x1 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/8]);
         let x3 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/4]);

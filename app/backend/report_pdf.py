@@ -39,8 +39,8 @@ LAYER_TITLES = {
     "forecast": "Subsidence forecast",
     "flooding": "Flooded areas",
     "egmsP": "EGMS points",
-    "dsa": "Subsidence troughs (DSA)",
-    "dsaf": "Subsidence troughs, filled (DSAF)",
+    "dsa": "Subsidence troughs variant 1",
+    "dsaf": "Subsidence troughs variant 2",
     "clc": "CORINE Land Cover 2018",
 }
 
@@ -469,11 +469,14 @@ def section_clc(df, meta):
 def make_trough_section(label):
     def _section(df, meta):
         area = to_num(df["area_m2"])
+        
         out = [
             p(f"The selected area contains <b>{fmt(len(df), 0)}</b> {label} features."),
             p(f"Their total area is <b>{fmt(area.sum() / 1e6, 3)}</b> km² (mean {fmt(area.mean())} m², "
               f"largest {fmt(area.max())} m²)."),
         ]
+        if(label == "Subsidence troughs variant 2"):
+                    out.appendleft(p(f"{label} is created through including some of non-measured areas into the detected depressions regions"))
         return out + generic_tables(df)
     return _section
 
@@ -482,8 +485,8 @@ SECTIONS = {
     "forecast": section_forecast,
     "flooding": section_flooding,
     "egmsP": section_egmsP,
-    "dsa": make_trough_section("subsidence trough (DSA)"),
-    "dsaf": make_trough_section("filled subsidence trough (DSAF)"),
+    "dsa": make_trough_section("subsidence trough variant 1"),
+    "dsaf": make_trough_section("subsidence trough variant 2"),
     "clc": section_clc,
 }
 
@@ -532,12 +535,12 @@ def _footer(canvas, doc):
 def build_report_pdf(data: dict, meta: dict) -> bytes:
     buf = BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm,
-                            topMargin=2 * cm, bottomMargin=2 * cm, title="Subsidence report")
+                            topMargin=2 * cm, bottomMargin=2 * cm, title="Detected Subsidence Areas Report")
 
     coords = ", ".join(f"{v:.5f}" for v in meta["coords"])
     clc_txt = clc_names(meta["clc_codes"]) if meta["clc_codes"] else "all classes (no filter)"
     story = [
-        Paragraph("Subsidence report", STYLES["title"]),
+        Paragraph("Detected Subsidence Areas Report", STYLES["title"]),
         Paragraph("Report parameters", STYLES["h1"]),
         p(f"Area of interest: {meta['mode']}, coordinates (EPSG:4326): {coords}"),
         p(f"Velocity filter: {meta['value_filter'][0]} to {meta['value_filter'][1]}"),
