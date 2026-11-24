@@ -85,25 +85,14 @@ map.fitBounds(leafletBounds, {padding: [30, 30]});
 const vectorLayersData = [];
 const layersList = {
     egms: {
-        name: 'egms mean velocity MOCK',
+        name: 'EGMS raster',
         type: 'raster',
-        url: 'data/mocks/mock_egms.tif', 
+        url: 'data/egms_nodata.tif', 
         visible: true,
         zIndex: 100,
         minColor: "",
         maxColor: "",
         legend_id: 'egms_legend'
-    },
-    hillshade: {
-        name: 'Hillshade (DTM) MOCK',
-        type: 'raster',
-        url: 'https://mapy.geoportal.gov.pl/wss/service/PZGIK/NMT/GRID1/WMTS/ShadedRelief', 
-        visible: true,
-        zIndex: 90,
-        minColor: "",
-        maxColor: "",
-        legend_id: 'hillshade_legend'
-
     }
 };
 
@@ -162,6 +151,7 @@ const nmtShaded = L.tileLayer.wms(
     format: 'image/png',  
     transparent: true,
     opacity: 0.8,
+    crs: L.CRS.EPSG4326,
     bounds: study_area_4326.getBounds(),
     attribution: '© GUGiK / Geoportal.gov.pl'
 });
@@ -202,7 +192,6 @@ form.addEventListener('submit', (event) => {
     console.log(maxv);
 
    /////////CLC/////////
-    //TODO: dodać filtr clc
     const selected = form.elements['filter-clc'].value;
     console.log(selected);
     if(selected != "100"){

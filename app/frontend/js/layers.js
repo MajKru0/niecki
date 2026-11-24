@@ -36,7 +36,7 @@ function hslToRgb(h, s, l)
 export function egmsColorMap(normalized){
     //light between 45 and 65
     //sat from 80 up
-
+    normalized = (normalized - 1) *(-1);
     const hue=140-(normalized*140);
     const hueDeg = hue/360;
     var light = 0.45 + normalized/5;

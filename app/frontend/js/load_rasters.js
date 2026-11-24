@@ -12,7 +12,7 @@ export async function loadRasterLayer(layerId, colorMap, layersList, layerContai
         //normalize
         const minVal = tiff.mins[0];
         const maxVal = tiff.maxs[0];
-        //console.log(minVal);
+        console.log(minVal);
 
         const geoRasterLayer = new GeoRasterLayer({
             georaster: tiff,
@@ -21,6 +21,13 @@ export async function loadRasterLayer(layerId, colorMap, layersList, layerContai
 
             pixelValuesToColorFn: function(values){
                 const val = values[0];
+                if (
+            val === undefined || val === null || Number.isNaN(val) ||
+            (tiff.noDataValue !== undefined && val === tiff.noDataValue) ||
+            val < -88
+        ) {
+            return null;
+        }
                 const normalized = (val-minVal)/(maxVal-minVal);
                 const color = colorMap(normalized);
                 //let m = Math.max(Math.max(val));
@@ -29,11 +36,12 @@ export async function loadRasterLayer(layerId, colorMap, layersList, layerContai
             }
         });
        //console.log(typeof(geoRasterLayer.options.pixelValuesToColorFn([maxVal])));
-        layersList.egms.minColor = geoRasterLayer.options.pixelValuesToColorFn([minVal]);
-        layersList.egms.maxColor = geoRasterLayer.options.pixelValuesToColorFn([maxVal]);
+        layersList.egms.minColor = geoRasterLayer.options.pixelValuesToColorFn([-88]);
+        layersList.egms.maxColor = geoRasterLayer.options.pixelValuesToColorFn([30]);
         const canvas = tiff.toCanvas({ height: 140, width: 20 });
             console.log("canvas:", canvas);
             document.getElementById("container").appendChild(canvas);
+        let x0 = geoRasterLayer.options.pixelValuesToColorFn([-87]);
         let x1 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/8]);
         let x3 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/4]);
         let x2 = geoRasterLayer.options.pixelValuesToColorFn([minVal + (maxVal-minVal)/2]);
@@ -50,12 +58,12 @@ export async function loadRasterLayer(layerId, colorMap, layersList, layerContai
 const c = document.getElementById(layer.legend_id);
 const ctx = c.getContext("2d");
 const grad=ctx.createLinearGradient(0,115,0,0);
-grad.addColorStop(0, layer.minColor);
+grad.addColorStop(0, x0);
 grad.addColorStop(0.14, x1);
-grad.addColorStop(0.3, x3);
-grad.addColorStop(0.45, x2);
-grad.addColorStop(0.5, x5);
-grad.addColorStop(0.73, x6);
+grad.addColorStop(0.2, x3);
+grad.addColorStop(0.35, x2);
+grad.addColorStop(0.4, x5);
+grad.addColorStop(0.53, x6);
 grad.addColorStop(0.8, x4);
 grad.addColorStop(0.9, x7);
 //-87,31 27,54

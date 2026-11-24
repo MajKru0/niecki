@@ -9,6 +9,7 @@ from flask import Flask
 from flask_cors import CORS
 from layers import layers_bp
 from config import Config
+from raports import layers_rapg
 
 FRONTEND_DIR = ROOT / "app" / "frontend"
 
@@ -16,7 +17,7 @@ app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
 CORS(app, origins=[Config.FRONTEND_URL])
 
 app.register_blueprint(layers_bp, url_prefix='/api/layers')
-
+app.register_blueprint(layers_rapg, url_prefix='/api/raports')
 @app.route("/")
 def index():
     return app.send_static_file("index.html")

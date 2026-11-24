@@ -182,34 +182,39 @@ if(isGenReady){
 }
 }
 
-function generateReport(forms){
+async function generateReport(forms){
     //Layers//
-    const selectedLayers = forms.getAll("chosenLayers");
+    try{
+        const selectedLayers = forms.getAll("chosenLayers");
 
-    //RADIO//
-    const selectedRadio = forms.get("bounds");
+        //RADIO//
+        const selectedRadio = forms.get("bounds");
 
-    let arrStr = "";
-    selectedLayers.forEach((el, k) => arrStr = arrStr+"'"+el+": "+ k +"',");
-    console.log("czekammm", arrStr);
-    
-    //BOUNDS//
-    let selectedBounds = "";
-    if(selectedRadio=="1"){
-        //TODO: check if in pairs
-       selectedBounds = forms.getAll("coords").join(",");
-    }else{
-        selectedBounds =(window.map.getBounds().toBBoxString());
+        let arrStr = "";
+        selectedLayers.forEach((el, k) => arrStr = arrStr+el+",");
+        arrStr = arrStr.slice(0, -1)
+        console.log("czekammm", arrStr);
+        
+        //BOUNDS//
+        let selectedBounds = "";
+        if(selectedRadio=="1"){
+            //TODO: check if in pairs
+        selectedBounds = forms.getAll("coords").join(",");
+        }else{
+            selectedBounds =(window.map.getBounds().toBBoxString());
+        }
+        
+        //FILTERS//
+        var filterObj = {min: -90, max: 30};
+        filterObj.min = form1.elements['filter-velocity-min'].value;
+        filterObj.max = form1.elements['filter-velocity-max'].value;
+        var clc = forms.getAll("chosenCLC");
+        
+        console.log("bbox: ", selectedBounds);
+        const res = await fetch(`${API}/raports/generate?bbox=${selectedBounds}&code=${clc}&vf=${[filterObj.min, filterObj.max]}&L=${arrStr}&radio=${selectedRadio}`);
+    }catch (error){
+        console.error(error);
     }
-    
-    //FILTERS//
-    var filterObj = {min: -90, max: 30, clc: []};
-    filterObj.min = form1.elements['filter-velocity-min'].value;
-    filterObj.max = form1.elements['filter-velocity-max'].value;
-    filterObj.clc = forms.getAll("chosenCLC");
-    
-    console.log("bbox: ", selectedBounds);
-
 }
 
 function validateRaport(forms){
